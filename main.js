@@ -1,4 +1,7 @@
-import axios from "axios";
+// import axios from "axios";
+
+// const { default: axios } = require("axios");
+// const { createElement } = require("react");
 
 // Aşağıdaki Fonksiyonu değiştirmeyin.
 async function ipAdresimiAl() {
@@ -9,9 +12,6 @@ async function ipAdresimiAl() {
     return response.data;
   });
 }
-
-const ipAdresim = await ipAdresimiAl();
-console.log(ipAdresim);
 
 /*
   AMAÇ:
@@ -31,6 +31,7 @@ console.log(ipAdresim);
 
 async function getData() {
   /* kodlar buraya */
+  return (await axios.get(`https://apis.ergineer.com/ipgeoapi/${await ipAdresimiAl()}`)).data;
 }
 
 /*
@@ -54,8 +55,50 @@ async function getData() {
   </div>
 */
 
-function cardOlustur(/* kodlar buraya */) {
+function cardOlustur(data) {
   /* kodlar buraya */
+  const card = document.createElement('div');
+  card.classList.add('card');
+  
+  const img = document.createElement('img');
+  img.src = `https://flaglog.com/codes/standardized-rectangle-120px/${data.ülkeKodu}.png`;
+
+  const cardInfo = document.createElement('div');
+  cardInfo.classList.add('card-info');
+  
+  const ip = document.createElement('h3');
+  ip.classList.add('ip');
+  ip.textContent = data["sorgu"];
+  cardInfo.appendChild(ip);
+  
+  const ulke = document.createElement('p');
+  ulke.classList.add('ulke');
+  ulke.textContent = `${data.ülke} (${data.ülkeKodu})`;
+  cardInfo.appendChild(ulke); 
+  
+  const enlemBoylam = document.createElement('p');
+  enlemBoylam.textContent = `Enlem: ${data.enlem} - Boylam: ${data.boylam}`;
+  cardInfo.appendChild(enlemBoylam); 
+  
+  const sehir = document.createElement('p');
+  sehir.textContent = `Şehir: ${data.bölgeAdı}`;
+  cardInfo.appendChild(sehir);
+
+  const saatDilimi = document.createElement('p');
+  saatDilimi.textContent = "Saat dilimi: " + data["saatdilimi"];
+  cardInfo.appendChild(saatDilimi);
+
+  const paraBirimi = document.createElement('p');
+  paraBirimi.textContent = "Para birimi: " + data["parabirimi"];
+  cardInfo.appendChild(paraBirimi);
+
+  const isp = document.createElement('p');
+  isp.textContent = "ISP: " + data["isp"];
+  cardInfo.appendChild(isp);
+
+  card.appendChild(img);
+  card.appendChild(cardInfo);
+  return card;
 }
 
 // Buradan sonrasını değiştirmeyin, burası yazdığınız kodu sayfaya uyguluyor.
